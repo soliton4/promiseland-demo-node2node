@@ -1,0 +1,40 @@
+promiseland.addLocalFrameName("node.js");
+promiseland.addLocalFrameName("server");
+promiseland.addLocalFrameName("server2");
+    
+
+
+var OtherServerFrame = class extends promiseland.FrameBaseClass {
+  name: "server1"
+};
+
+
+
+
+var otherServerFrame = new OtherServerFrame();
+promiseland.addFrame(otherServerFrame);
+
+
+
+var connection = new otherServerFrame.ConnectionBaseClass();
+connection.send = (data){
+  process.send(data);
+};
+otherServerFrame.newConnection(connection);
+
+process.on("message", function(data){
+  connection.data(data);
+});
+
+process.on("disconnect", function(){
+  connection.disconnect();
+});
+
+
+var playGround = require  "./playGround";
+
+
+
+playGround.start2();
+
+

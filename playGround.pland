@@ -1,0 +1,24 @@
+
+var servername = "server1";
+
+
+function s1Fun() frame "server1" {
+  console.log("running s1fun on " + servername);
+};
+
+
+function s2Fun() frame "server2" {
+  console.log("running s2fun on " + servername);
+};
+
+
+return {
+  start: (){
+    console.log("running");
+    *s1Fun();
+    *s2Fun();
+  },
+  start2: (){
+    servername = "server2";
+  }
+}

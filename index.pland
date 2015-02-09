@@ -1,0 +1,56 @@
+try{
+
+promiseland.addLocalFrameName("node.js");
+promiseland.addLocalFrameName("server");
+promiseland.addLocalFrameName("server1");
+    
+
+
+var OtherServerFrame = class extends promiseland.FrameBaseClass {
+  name: "server2"
+};
+
+
+
+var cp = require ('child_process');
+
+var n = cp.fork(__dirname + '/server2.js');
+
+
+var otherServerFrame = new OtherServerFrame();
+promiseland.addFrame(otherServerFrame);
+
+
+var connection = new otherServerFrame.ConnectionBaseClass();
+connection.send = (data){
+  n.send(data);
+};
+otherServerFrame.newConnection(connection);
+
+n.on("message", function(data){
+  console.log("got data:");
+  console.log(data);
+  connection.data(data);
+});
+
+n.on("disconnect", function(){
+  connection.disconnect();
+});
+
+
+var playGround = require  "./playGround";
+
+
+var cb = new Callback();
+setTimeout(cb, 1000); // wait 1 sec before start - to be on the safe side
+
+*cb.promise;
+
+  console.log("calling start");
+playGround.start();
+
+
+}catch(err){
+  console.log("error");
+  console.log(err);
+}
